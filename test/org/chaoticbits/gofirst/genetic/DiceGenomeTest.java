@@ -1,0 +1,40 @@
+package org.chaoticbits.gofirst.genetic;
+
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.chaoticbits.gofirst.Die;
+import org.junit.Test;
+
+public class DiceGenomeTest {
+
+	private static final List<Integer> NORMAL = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
+			17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
+			44, 45, 46, 47, 48);
+	// 11 and 13 are flipped
+	private static final List<Integer> TEST1 = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 12, 11, 14, 15, 16, 17,
+			18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
+			45, 46, 47, 48);
+
+	@Test
+	public void getDiceWorksNormal() throws Exception {
+		DiceGenome genome = new DiceGenome(NORMAL);
+		List<Die> dice = genome.getDice();
+		assertEquals("size", 4, dice.size());
+		assertEquals(1, dice.get(0).getSides()[0]);
+		assertEquals(48, dice.get(3).getSides()[11]);
+		assertEquals(29, dice.get(2).getSides()[4]);
+	}
+
+	@Test
+	public void getDiceWorksTest1() throws Exception {
+		DiceGenome genome = new DiceGenome(TEST1);
+		List<Die> dice = genome.getDice();
+		assertEquals("size", 4, dice.size());
+		assertEquals(13, dice.get(0).getSides()[10]);
+		assertEquals(12, dice.get(0).getSides()[11]);
+		assertEquals(11, dice.get(1).getSides()[0]);
+	}
+}
