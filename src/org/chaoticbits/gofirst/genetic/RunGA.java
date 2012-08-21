@@ -1,0 +1,89 @@
+package org.chaoticbits.gofirst.genetic;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
+import org.apache.log4j.PropertyConfigurator;
+import org.uncommons.maths.random.MersenneTwisterRNG;
+
+public class RunGA {
+	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RunGA.class);
+	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
+	private static final int NUM_FITNESS_TRIALS = 100000;
+	public static final int POPULATION_SIZE = 1000;
+	public static final int NUM_GENERATIONS = 10000;
+	public static final int MUTATION_SWAPS = 1;
+	public static final int NUM_MUTATIONS_PER_GEN = 100;
+	public static final int NUM_IMMIGRANTS_PER_GEN = 200;
+	public static final int NUM_CROSSOVER_PER_GEN = 200;
+	private static final SimulationEvaluator evaluator = new SimulationEvaluator(rand, NUM_FITNESS_TRIALS);
+
+	public static void main(String[] args) {
+		PropertyConfigurator.configure("log4j.properties");
+		List<DiceGenome> population = init(rand);
+		for (int gen = 0; gen < NUM_GENERATIONS; gen++) {
+			mutate(population);
+			immigrate(population);
+			crossover(population);
+			cull(population);
+			report(gen, population);
+		}
+	}
+
+	private static void mutate(List<DiceGenome> population) {
+		log.info("Mutating...");
+		SwapMutator mutator = new SwapMutator(rand);
+		for (int i = 0; i < NUM_MUTATIONS_PER_GEN; i++) {
+			population.add(new DiceGenome(mutator.mutate(population.get(rand.nextInt(POPULATION_SIZE)).getGenome(),
+					MUTATION_SWAPS)));
+		}
+		Collections.sort(population); // sort by highest fitness
+	}
+
+	private static void immigrate(List<DiceGenome> population) {
+		log.info("Immigrating...");
+		for (int i = 0; i < NUM_IMMIGRANTS_PER_GEN; i++) {
+			population.add(new DiceGenome(rand, evaluator));
+		}
+		Collections.sort(population); // sort by highest fitness
+	}
+
+	private static void crossover(List<DiceGenome> population) {
+		log.info("Crossing over...");
+		PermutationCrossover crossover = new PermutationCrossover();
+		for (int i = 0; i < NUM_CROSSOVER_PER_GEN; i++) {
+			int cut = rand.nextInt(DiceGenome.SIZE);
+			List<Integer> first = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN)).getGenome();
+			List<Integer> second = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN)).getGenome();
+			population.add(new DiceGenome(crossover.crossOver(first, second, cut)));
+			population.add(new DiceGenome(crossover.crossOver(second, first, cut)));
+		}
+		Collections.sort(population); // sort by highest fitness
+	}
+
+	private static void cull(List<DiceGenome> oldPop) {
+		log.info("Culling...");
+		Collections.sort(oldPop); // sort by highest fitness
+		List<DiceGenome> newPop = new ArrayList<DiceGenome>();
+		for (int i = 0; i < POPULATION_SIZE; i++) {
+			newPop.add(oldPop.get(i));
+		}
+	}
+
+	private static void report(int gen, List<DiceGenome> sortedPop) {
+		log.info("Reporting...");
+		System.out.println("gen=" + gen + ", highest: " + sortedPop.get(0));
+		System.out.println("gen=" + gen + ", median: " + sortedPop.get(500));
+	}
+
+	private static List<DiceGenome> init(Random rand) {
+		List<DiceGenome> population = new ArrayList<DiceGenome>();
+		for (int i = 0; i < POPULATION_SIZE; i++) {
+			population.add(new DiceGenome(rand, evaluator));
+		}
+		Collections.sort(population); // sort by highest fitness
+		return population;
+	}
+}

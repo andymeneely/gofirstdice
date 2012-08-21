@@ -7,13 +7,15 @@ import java.util.Random;
 
 import org.chaoticbits.gofirst.Die;
 
-public class DiceGenome {
+public class DiceGenome implements Comparable<DiceGenome> {
 	public static final Integer NUM_SIDES = 12;
 	public static final Integer NUM_DICE = 4;
+	public static final Integer SIZE = NUM_DICE * NUM_SIDES;
 
 	private final List<Integer> genome = new ArrayList<Integer>(NUM_SIDES * NUM_DICE);
 	private final IFitnessEvaluator evaluator;
 	private final Random rand;
+	private Double fitness = null;
 
 	public DiceGenome(Random rand, IFitnessEvaluator evaluator) {
 		this.rand = rand;
@@ -54,6 +56,18 @@ public class DiceGenome {
 	}
 
 	public Double getFitness() {
-		return evaluator.fitness(this);
+		if (fitness == null)
+			fitness = evaluator.fitness(this);
+		return fitness;
+	}
+
+	@Override
+	public int compareTo(DiceGenome o) {
+		return -1 * getFitness().compareTo(o.getFitness()); // sort in reverse order - highest first
+	}
+
+	@Override
+	public String toString() {
+		return "fit=" + getFitness() + ";" + genome.toString();
 	}
 }
