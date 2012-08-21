@@ -23,6 +23,6 @@ public class SimulationEvaluatorTest {
 	public void testComputeInterleaved() throws Exception {
 		// interleaved is a little better
 		Double fitness = new SimulationEvaluator(new Random(123)).fitness(new DiceGenome(DiceGenomeTest.INTERLEAVED));
-		assertEquals("fitness is terrible, about 81% close", 0.832, fitness, 0.001);
+		assertEquals("fitness is terrible, about 83% close", 0.832, fitness, 0.001);
 	}
 }
