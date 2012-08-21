@@ -7,21 +7,24 @@ import java.util.Random;
 
 import org.chaoticbits.gofirst.Die;
 
-public class DiceGenome implements IFitnessEvaluator {
+public class DiceGenome {
 	public static final Integer NUM_SIDES = 12;
 	public static final Integer NUM_DICE = 4;
 
 	private final List<Integer> genome = new ArrayList<Integer>(NUM_SIDES * NUM_DICE);
 	private final IFitnessEvaluator evaluator;
+	private final Random rand;
 
 	public DiceGenome(Random rand, IFitnessEvaluator evaluator) {
+		this.rand = rand;
 		initDie(rand);
 		this.evaluator = evaluator;
 	}
 
 	public DiceGenome(List<Integer> sides) {
 		genome.addAll(sides);
-		evaluator = new SimulationEvaluator();
+		rand = new Random();
+		evaluator = new SimulationEvaluator(rand);
 	}
 
 	private void initDie(Random rand) {
@@ -47,6 +50,10 @@ public class DiceGenome implements IFitnessEvaluator {
 	}
 
 	public Double fitness() {
-		return evaluator.fitness();
+		return evaluator.fitness(this);
+	}
+
+	public Double getFitness() {
+		return evaluator.fitness(this);
 	}
 }
