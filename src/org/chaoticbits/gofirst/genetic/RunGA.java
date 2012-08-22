@@ -11,18 +11,28 @@ import org.uncommons.maths.random.MersenneTwisterRNG;
 public class RunGA {
 	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RunGA.class);
 	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
-	private static final int NUM_FITNESS_TRIALS = 100000;
+	private static final int NUM_FITNESS_TRIALS = 10000;
 	public static final int POPULATION_SIZE = 1000;
-	public static final int NUM_GENERATIONS = 10000;
+	public static final int NUM_GENERATIONS = 10;
 	public static final int MUTATION_SWAPS = 1;
-	public static final int NUM_MUTATIONS_PER_GEN = 100;
+	public static final int NUM_MUTATIONS_PER_GEN = 1000;
 	public static final int NUM_IMMIGRANTS_PER_GEN = 200;
 	public static final int NUM_CROSSOVER_PER_GEN = 200;
 	private static final SimulationEvaluator evaluator = new SimulationEvaluator(rand, NUM_FITNESS_TRIALS);
 
 	public static void main(String[] args) {
 		PropertyConfigurator.configure("log4j.properties");
-		List<DiceGenome> population = init(rand);
+		log.info("===First population===");
+		List<DiceGenome> population = runAlg(init(rand));
+		log.info("===Second population===");
+		population.addAll(runAlg(init(rand)));
+		log.info("===Third population===");
+		population.addAll(runAlg(init(rand)));
+		log.info("===Evolving Main Population===");
+		runAlg(population);
+	}
+
+	private static List<DiceGenome> runAlg(List<DiceGenome> population) {
 		for (int gen = 0; gen < NUM_GENERATIONS; gen++) {
 			mutate(population);
 			immigrate(population);
@@ -30,14 +40,14 @@ public class RunGA {
 			cull(population);
 			report(gen, population);
 		}
+		return population;
 	}
 
 	private static void mutate(List<DiceGenome> population) {
 		log.info("Mutating...");
 		SwapMutator mutator = new SwapMutator(rand);
 		for (int i = 0; i < NUM_MUTATIONS_PER_GEN; i++) {
-			population.add(new DiceGenome(mutator.mutate(population.get(rand.nextInt(POPULATION_SIZE)).getGenome(),
-					MUTATION_SWAPS)));
+			population.add(new DiceGenome(mutator.mutate(population.get(rand.nextInt(POPULATION_SIZE)).getGenome(), MUTATION_SWAPS)));
 		}
 		Collections.sort(population); // sort by highest fitness
 	}
@@ -79,6 +89,7 @@ public class RunGA {
 	}
 
 	private static List<DiceGenome> init(Random rand) {
+		log.info("Initializing population...");
 		List<DiceGenome> population = new ArrayList<DiceGenome>();
 		for (int i = 0; i < POPULATION_SIZE; i++) {
 			population.add(new DiceGenome(rand, evaluator));
