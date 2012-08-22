@@ -17,7 +17,8 @@ public class SwapMutator {
 		mutant.addAll(input);
 		for (int i = 0; i < times; i++) {
 			int firstIndex = rand.nextInt(mutant.size());
-			int secondIndex = rand.nextInt(mutant.size());
+			// swap with another die side so it's not all the same most of the time
+			int secondIndex = (firstIndex + (rand.nextInt(DiceGenome.NUM_DICE) + 1) * DiceGenome.NUM_SIDES) % mutant.size();
 			int temp = mutant.get(firstIndex);
 			mutant.set(firstIndex, mutant.get(secondIndex));
 			mutant.set(secondIndex, temp);
