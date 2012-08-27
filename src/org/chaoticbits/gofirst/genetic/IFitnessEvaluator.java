@@ -1,5 +1,5 @@
 package org.chaoticbits.gofirst.genetic;
 
-public interface IFitnessEvaluator {
-	public Double fitness(DiceGenome genome);
+public interface IFitnessEvaluator<T> {
+	public Double fitness(T genome);
 }

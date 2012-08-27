@@ -5,7 +5,13 @@ import java.util.Random;
 
 import org.chaoticbits.gofirst.Die;
 
-public class SimulationEvaluator implements IFitnessEvaluator {
+/**
+ * Fitness function for DiceGenomes. Based on simulations. See the main fitness function comment for
+ * algorithmic details.
+ * @author andy
+ * 
+ */
+public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 
 	public static final long DEFAULT_NUM_TRIALS = 10000;
 	private final long numTrials;
@@ -21,23 +27,32 @@ public class SimulationEvaluator implements IFitnessEvaluator {
 		this.numTrials = DEFAULT_NUM_TRIALS;
 	}
 
-	@Override
+	/**
+	 * Given the genome, compute the fitness by simluating dice rolls. Given numTrials (from the
+	 * constructor), roll the dice for numTrials times, and count the number of victories for each player.
+	 * Then divide numTrials by the number of players - that's the expected number of victories for each
+	 * player. Take the total number of victories for each player minus the expected number of victories, and
+	 * average the percentage correct.
+	 * 
+	 * Do this for each combination of players, up to DiceGenome.NUM_DICE. For example, all four players.
+	 * Then all three combinations of three players. Then all combinations of two players. Do an unweighted
+	 * average of each of those and that's your fitness.
+	 * 
+	 * A poor fitness will be about 94%, and a great fitness is 99.99%
+	 * 
+	 * @param genome
+	 * @return the average percentage over or under the expected number of trials won by each player
+	 */
 	public Double fitness(DiceGenome genome) {
 		List<Die> dice = genome.getDice();
-		int numDice = dice.size();
-		long[] victories = simulate(dice);
-		return compute(victories, numDice);
+		double fitness = 0;
+		fitness += compute(fourPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
+		fitness += compute(threePlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
+		fitness += compute(twoPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
+		return fitness / 4.0d; // unweighted average
 	}
 
-	private long[] simulate(List<Die> dice) {
-		long[] victories = new long[] { 0, 0, 0, 0 };
-		fourPlayer(dice, victories);
-		threePlayer(dice, victories);
-		twoPlayer(dice, victories);
-		return victories;
-	}
-
-	private void fourPlayer(List<Die> dice, long[] victories) {
+	private long[] fourPlayer(List<Die> dice, long[] victories) {
 		for (long trial = 0; trial < numTrials; trial++) {
 			int victor = -1;
 			int highest = -1;
@@ -50,9 +65,10 @@ public class SimulationEvaluator implements IFitnessEvaluator {
 			}
 			victories[victor]++;
 		}
+		return victories;
 	}
 
-	private void threePlayer(List<Die> dice, long[] victories) {
+	private long[] threePlayer(List<Die> dice, long[] victories) {
 		for (long trial = 0; trial < numTrials; trial++) {
 			for (int playerOut = 0; playerOut < victories.length; playerOut++) {
 				int victor = -1;
@@ -69,9 +85,10 @@ public class SimulationEvaluator implements IFitnessEvaluator {
 				victories[victor]++;
 			}
 		}
+		return victories;
 	}
 
-	private void twoPlayer(List<Die> dice, long[] victories) {
+	private long[] twoPlayer(List<Die> dice, long[] victories) {
 		for (long trial = 0; trial < numTrials; trial++) {
 			for (int playerOut1 = 0; playerOut1 < victories.length - 1; playerOut1++) {
 				for (int playerOut2 = playerOut1 + 1; playerOut2 < victories.length; playerOut2++) {
@@ -90,6 +107,7 @@ public class SimulationEvaluator implements IFitnessEvaluator {
 				}
 			}
 		}
+		return victories;
 	}
 
 	private Double compute(long[] victories, int numDice) {
