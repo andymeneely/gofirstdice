@@ -11,11 +11,11 @@ import org.uncommons.maths.random.MersenneTwisterRNG;
 public class RunGA {
 	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RunGA.class);
 	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
-	private static final int NUM_FITNESS_TRIALS = 10000;
+	private static final int NUM_FITNESS_TRIALS = 1000;
 	public static final int POPULATION_SIZE = 1000;
 	public static final int NUM_GENERATIONS = 10;
 	public static final int MUTATION_SWAPS = 1;
-	public static final int NUM_MUTATIONS_PER_GEN = 1000;
+	public static final int NUM_MUTATIONS_PER_GEN = 500;
 	public static final int NUM_IMMIGRANTS_PER_GEN = 200;
 	public static final int NUM_CROSSOVER_PER_GEN = 200;
 	private static final SimulationEvaluator evaluator = new SimulationEvaluator(rand, NUM_FITNESS_TRIALS);
