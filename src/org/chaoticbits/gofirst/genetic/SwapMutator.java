@@ -24,8 +24,7 @@ public class SwapMutator {
 	 * @return
 	 */
 	public List<Integer> mutate(List<Integer> input, int numStrata, int times) {
-		List<Integer> mutant = new ArrayList<Integer>();
-		mutant.addAll(input); // copy!
+		List<Integer> mutant = new ArrayList<Integer>(input /* copy! */);
 		for (int i = 0; i < times; i++) {
 			int firstIndex = rand.nextInt(mutant.size());
 			// swap with another die side so it's not all the same most of the time
