@@ -23,25 +23,16 @@ public class SwapMutator {
 	 * @param times
 	 * @return
 	 */
-	public List<Integer> mutate(List<Integer> input, int numStrata, int times) {
-		List<Integer> mutant = new ArrayList<Integer>(input /* copy! */);
+	public List<Pair<Integer>> mutate(int size, int numStrata, int times) {
+		List<Pair<Integer>> swaps = new ArrayList<Pair<Integer>>(times);
 		for (int i = 0; i < times; i++) {
-			int firstIndex = rand.nextInt(mutant.size());
+			int firstIndex = rand.nextInt(size);
 			// swap with another die side so it's not all the same most of the time
 			int otherStratum = rand.nextInt(numStrata - 1) + 1; // relative to this one (1..numStrata-1)
-			int secondIndex = (firstIndex + otherStratum * (mutant.size() / numStrata)) % mutant.size();
-			swap(mutant, firstIndex, secondIndex);
+			int secondIndex = (firstIndex + otherStratum * (size / numStrata)) % size;
+			swaps.add(new Pair<Integer>(firstIndex, secondIndex));
 		}
-		return mutant;
-	}
-
-	/*
-	 * A basic in-place swap
-	 */
-	private void swap(List<Integer> mutant, int firstIndex, int secondIndex) {
-		int temp = mutant.get(firstIndex);
-		mutant.set(firstIndex, mutant.get(secondIndex));
-		mutant.set(secondIndex, temp);
+		return swaps;
 	}
 
 }

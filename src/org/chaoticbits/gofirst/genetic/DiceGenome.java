@@ -25,9 +25,9 @@ public class DiceGenome implements Comparable<DiceGenome> {
 		this.evaluator = evaluator;
 	}
 
-	public DiceGenome(List<Integer> sides) {
+	public DiceGenome(Random rand, List<Integer> sides) {
 		genome.addAll(sides);
-		rand = new Random();
+		this.rand = rand;
 		evaluator = new SimulationEvaluator(rand);
 	}
 
@@ -37,6 +37,11 @@ public class DiceGenome implements Comparable<DiceGenome> {
 		Collections.shuffle(genome, rand);
 	}
 
+	/**
+	 * Converts the genome to a list of dice, for easier rolling
+	 * 
+	 * @return
+	 */
 	public List<Die> getDice() {
 		List<Die> dice = new ArrayList<Die>(NUM_DICE);
 		for (int i = 0; i < NUM_DICE; i++) {
@@ -49,8 +54,30 @@ public class DiceGenome implements Comparable<DiceGenome> {
 		return dice;
 	}
 
+	/**
+	 * Returns the internal genome representation, as a list of integers
+	 * 
+	 * @return
+	 */
+	@Deprecated
 	public List<Integer> getGenome() {
 		return genome;
+	}
+
+	/**
+	 * Mutate the genome by swapping at the two given indices.
+	 * 
+	 * @param firstIndex
+	 * @param secondIndex
+	 */
+	public DiceGenome makeMutant(List<Pair<Integer>> swaps) {
+		List<Integer> mutant = new ArrayList<Integer>(genome /* copy! */);
+		for (Pair<Integer> pair : swaps) {
+			int temp = mutant.get(pair.first);
+			mutant.set(pair.first, mutant.get(pair.second));
+			mutant.set(pair.second, temp);
+		}
+		return new DiceGenome(rand, mutant);
 	}
 
 	public Double fitness() {
@@ -90,6 +117,42 @@ public class DiceGenome implements Comparable<DiceGenome> {
 			}
 			if (!mine.equals(his))
 				return false; // else keep going
+		}
+		return true;
+		
+		@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((genome == null) ? 0 : genome.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DiceGenome other = (DiceGenome) obj;
+		if (genome == null) {
+			if (other.genome != null)
+				return false;
+		} else if (!equals(genome, other.genome))
+			return false;
+		return true;
+	}
+
+	private boolean equals(List<Integer> a, List<Integer> b) {
+		if (a == b)
+			return true;
+		if (a == null || b == null || a.size() != b.size())
+			return false;
+		for (int i = 0; i < a.size(); i++) {
+			if (a.get(i) != b.get(i))
+				return false;
 		}
 		return true;
 	}

@@ -47,9 +47,10 @@ public class RunGA {
 	private static void mutate(List<DiceGenome> population) {
 		log.info("Mutating...");
 		SwapMutator mutator = new SwapMutator(rand);
-		for (int i = 0; i < NUM_MUTATIONS_PER_GEN; i++) {
-			population.add(new DiceGenome(mutator.mutate(population.get(rand.nextInt(POPULATION_SIZE)).getGenome(),
-					DiceGenome.NUM_DICE, MUTATION_SWAPS)));
+		Collections.shuffle(population, rand); // mutations are completely random - no fitness bias
+		for (int i = 0; i < NUM_MUTATIONS_PER_GEN; i++) { // nobody gets mutated more than once
+			population.add(population.get(i).makeMutant(
+					mutator.mutate(DiceGenome.SIZE, DiceGenome.NUM_DICE, MUTATION_SWAPS)));
 		}
 		Collections.sort(population); // sort by highest fitness
 	}
@@ -69,8 +70,8 @@ public class RunGA {
 			int cut = rand.nextInt(DiceGenome.SIZE);
 			List<Integer> first = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN)).getGenome();
 			List<Integer> second = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN)).getGenome();
-			population.add(new DiceGenome(crossover.crossOver(first, second, cut)));
-			population.add(new DiceGenome(crossover.crossOver(second, first, cut)));
+			population.add(new DiceGenome(rand, crossover.crossOver(first, second, cut)));
+			population.add(new DiceGenome(rand, crossover.crossOver(second, first, cut)));
 		}
 		Collections.sort(population); // sort by highest fitness
 	}
