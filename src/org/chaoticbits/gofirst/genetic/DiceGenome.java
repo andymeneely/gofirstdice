@@ -15,11 +15,11 @@ public class DiceGenome implements Comparable<DiceGenome> {
 	public static final Integer SIZE = NUM_DICE * NUM_SIDES;
 
 	private final List<Integer> genome = new ArrayList<Integer>(NUM_SIDES * NUM_DICE);
-	private final IFitnessEvaluator evaluator;
+	private final IFitnessEvaluator<DiceGenome> evaluator;
 	private final Random rand;
 	private Double fitness = null;
 
-	public DiceGenome(Random rand, IFitnessEvaluator evaluator) {
+	public DiceGenome(Random rand, IFitnessEvaluator<DiceGenome> evaluator) {
 		this.rand = rand;
 		initDie(rand);
 		this.evaluator = evaluator;
