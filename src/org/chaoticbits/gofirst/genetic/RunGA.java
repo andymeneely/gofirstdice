@@ -48,7 +48,8 @@ public class RunGA {
 		log.info("Mutating...");
 		SwapMutator mutator = new SwapMutator(rand);
 		for (int i = 0; i < NUM_MUTATIONS_PER_GEN; i++) {
-			population.add(new DiceGenome(mutator.mutate(population.get(rand.nextInt(POPULATION_SIZE)).getGenome(), MUTATION_SWAPS)));
+			population.add(new DiceGenome(mutator.mutate(population.get(rand.nextInt(POPULATION_SIZE)).getGenome(),
+					DiceGenome.NUM_DICE, MUTATION_SWAPS)));
 		}
 		Collections.sort(population); // sort by highest fitness
 	}
