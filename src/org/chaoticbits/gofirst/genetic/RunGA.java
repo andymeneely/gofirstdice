@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.chaoticbits.gofirst.genetic.algorithm.GaussianRNGTransformer;
 import org.chaoticbits.gofirst.genetic.algorithm.SwapMutator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 
@@ -53,7 +54,6 @@ public class RunGA {
 			population.add(population.get(i).makeMutant(
 					mutator.mutate(DiceGenome.SIZE, DiceGenome.NUM_DICE, MUTATION_SWAPS)));
 		}
-		Collections.sort(population); // sort by highest fitness
 	}
 
 	private static void immigrate(List<DiceGenome> population) {
@@ -61,24 +61,28 @@ public class RunGA {
 		for (int i = 0; i < NUM_IMMIGRANTS_PER_GEN; i++) {
 			population.add(new DiceGenome(rand, evaluator));
 		}
-		Collections.sort(population); // sort by highest fitness
 	}
 
 	private static void crossover(List<DiceGenome> population) {
+		log.info("Sorting...");
+		Collections.sort(population); // sort by highest fitness
 		log.info("Crossing over...");
+		GaussianRNGTransformer rng = new GaussianRNGTransformer(rand);
 		for (int i = 0; i < NUM_CROSSOVER_PER_GEN; i++) {
 			int cut = rand.nextInt(DiceGenome.SIZE);
-			DiceGenome first = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN));
-			DiceGenome second = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN));
+			int firstIndex = rng.nextInt(POPULATION_SIZE);
+			int secondIndex = rng.nextInt(POPULATION_SIZE, firstIndex /* no self-crossovers */);
+			DiceGenome first = population.get(firstIndex);
+			DiceGenome second = population.get(secondIndex);
 			population.add(first.crossOver(second, cut));
 			population.add(second.crossOver(first, cut));
 		}
-		Collections.sort(population); // sort by highest fitness
 	}
 
 	private static void cull(List<DiceGenome> oldPop) {
-		log.info("Culling...");
+		log.info("Sorting...");
 		Collections.sort(oldPop); // sort by highest fitness
+		log.info("Culling...");
 		List<DiceGenome> newPop = new ArrayList<DiceGenome>();
 		for (int i = 0; i < POPULATION_SIZE; i++) {
 			if (i > 0 && !oldPop.get(i).equivalent(oldPop.get(i - 1)))
@@ -104,7 +108,6 @@ public class RunGA {
 		for (int i = 0; i < POPULATION_SIZE; i++) {
 			population.add(new DiceGenome(rand, evaluator));
 		}
-		Collections.sort(population); // sort by highest fitness
 		return population;
 	}
 }
