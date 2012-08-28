@@ -78,7 +78,8 @@ public class RunGA {
 		Collections.sort(oldPop); // sort by highest fitness
 		List<DiceGenome> newPop = new ArrayList<DiceGenome>();
 		for (int i = 0; i < POPULATION_SIZE; i++) {
-			newPop.add(oldPop.get(i));
+			if (i > 0 && !oldPop.get(i).equivalent(oldPop.get(i - 1)))
+				newPop.add(oldPop.get(i));
 		}
 	}
 

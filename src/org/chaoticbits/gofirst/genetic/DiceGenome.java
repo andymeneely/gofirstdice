@@ -2,8 +2,10 @@ package org.chaoticbits.gofirst.genetic;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.chaoticbits.gofirst.Die;
 
@@ -69,5 +71,26 @@ public class DiceGenome implements Comparable<DiceGenome> {
 	@Override
 	public String toString() {
 		return "fit=" + getFitness() + ";" + genome.toString();
+	}
+
+	/**
+	 * Returns true if this genome is equivalent to another, ignoring order of integers within a single die
+	 * 
+	 * Constructs sets of dice and checks if the sets are equal to each other. Probably pretty slow.
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean equivalent(DiceGenome other) {
+		for (int die = 0; die < NUM_DICE; die++) {
+			Set<Integer> mine = new HashSet<Integer>(), his = new HashSet<Integer>();
+			for (int side = NUM_SIDES * die; side < NUM_SIDES * (die + 1); side++) {
+				mine.add(genome.get(side));
+				his.add(other.genome.get(side) /* mmm, tasty encapsulation breakage */);
+			}
+			if (!mine.equals(his))
+				return false; // else keep going
+		}
+		return true;
 	}
 }
