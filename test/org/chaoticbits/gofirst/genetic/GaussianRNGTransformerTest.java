@@ -29,7 +29,7 @@ public class GaussianRNGTransformerTest {
 		assertEquals(0, rng.nextInt(100));
 		ctrl.verify();
 	}
-	
+
 	@Test
 	public void roundDown() throws Exception {
 		expect(rand.nextGaussian()).andReturn(0.009).once();// mean is most likely
@@ -58,8 +58,26 @@ public class GaussianRNGTransformerTest {
 	}
 
 	@Test
-	public void unlikely() throws Exception {
+	public void unlikelyIn1() throws Exception {
 		expect(rand.nextGaussian()).andReturn(0.99).once();// very unlikely
+		ctrl.replay();
+		GaussianRNGTransformer rng = new GaussianRNGTransformer(rand);
+		assertEquals(99, rng.nextInt(100));
+		ctrl.verify();
+	}
+
+	@Test
+	public void unlikelyOver1() throws Exception {
+		expect(rand.nextGaussian()).andReturn(1.1).once();// very unlikely
+		ctrl.replay();
+		GaussianRNGTransformer rng = new GaussianRNGTransformer(rand);
+		assertEquals(99, rng.nextInt(100));
+		ctrl.verify();
+	}
+
+	@Test
+	public void unlikelyAt1() throws Exception {
+		expect(rand.nextGaussian()).andReturn(1.0).once();// very unlikely
 		ctrl.replay();
 		GaussianRNGTransformer rng = new GaussianRNGTransformer(rand);
 		assertEquals(99, rng.nextInt(100));
@@ -72,7 +90,7 @@ public class GaussianRNGTransformerTest {
 		expect(rand.nextGaussian()).andReturn(0.1).once();// very unlikely
 		ctrl.replay();
 		GaussianRNGTransformer rng = new GaussianRNGTransformer(rand);
-		assertEquals(10, rng.nextInt(100,99));
+		assertEquals(10, rng.nextInt(100, 99));
 		ctrl.verify();
 	}
 
