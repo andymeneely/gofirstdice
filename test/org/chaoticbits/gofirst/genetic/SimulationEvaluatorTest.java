@@ -15,7 +15,7 @@ public class SimulationEvaluatorTest {
 		// which means that it's really, really lopsided
 		Random rand = new Random(123);
 		Double fitness = new SimulationEvaluator(rand).fitness(new DiceGenome(rand, DiceGenomeTest.NORMAL));
-		assertEquals("fitness is terrible, only 35.4% right", 0.354, fitness, 0.01);
+		assertEquals("fitness is terrible, only about half right", 0.472, fitness, 0.01);
 	}
 
 	@Test
@@ -23,6 +23,6 @@ public class SimulationEvaluatorTest {
 		// interleaved is a little better
 		Random rand = new Random(123);
 		Double fitness = new SimulationEvaluator(rand).fitness(new DiceGenome(rand, DiceGenomeTest.INTERLEAVED));
-		assertEquals("fitness is better, about 89% close", 0.656, fitness, 0.001);
+		assertEquals("fitness is better", 0.875, fitness, 0.001);
 	}
 }

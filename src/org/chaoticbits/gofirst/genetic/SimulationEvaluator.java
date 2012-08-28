@@ -50,7 +50,7 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 		fitness += compute(fourPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
 		fitness += compute(threePlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
 		fitness += compute(twoPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
-		return fitness / 4.0d; // unweighted average
+		return fitness / 3.0d; // unweighted average
 	}
 
 	private long[] fourPlayer(List<Die> dice, long[] victories) {
