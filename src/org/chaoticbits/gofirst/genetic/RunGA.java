@@ -16,7 +16,7 @@ public class RunGA {
 	public static final int POPULATION_SIZE = 1000;
 	public static final int NUM_GENERATIONS = 10;
 	public static final int MUTATION_SWAPS = 1;
-	public static final int NUM_MUTATIONS_PER_GEN = 500;
+	public static final int NUM_MUTANTS_PER_GEN = 500;
 	public static final int NUM_IMMIGRANTS_PER_GEN = 200;
 	public static final int NUM_CROSSOVER_PER_GEN = 200;
 	private static final SimulationEvaluator evaluator = new SimulationEvaluator(rand, NUM_FITNESS_TRIALS);
@@ -49,7 +49,7 @@ public class RunGA {
 		log.info("Mutating...");
 		SwapMutator mutator = new SwapMutator(rand);
 		Collections.shuffle(population, rand); // mutations are completely random - no fitness bias
-		for (int i = 0; i < NUM_MUTATIONS_PER_GEN; i++) { // nobody gets mutated more than once
+		for (int i = 0; i < NUM_MUTANTS_PER_GEN; i++) { // nobody gets mutated more than once
 			population.add(population.get(i).makeMutant(
 					mutator.mutate(DiceGenome.SIZE, DiceGenome.NUM_DICE, MUTATION_SWAPS)));
 		}
@@ -88,7 +88,13 @@ public class RunGA {
 
 	private static void report(int gen, List<DiceGenome> sortedPop) {
 		log.info("Reporting...");
-		System.out.println("gen=" + gen + ", highest: " + sortedPop.get(0));
+		DiceGenome best = sortedPop.get(0);
+		System.out.println("gen=" + gen + ", highest: " + best);
+		System.out.println("History of the highest...");
+		while (best != null) {
+			System.out.println("\t" + best.getBirthCertificate().getType());
+			best = best.getBirthCertificate().getParent();
+		}
 		System.out.println("gen=" + gen + ", median: " + sortedPop.get(500));
 	}
 
