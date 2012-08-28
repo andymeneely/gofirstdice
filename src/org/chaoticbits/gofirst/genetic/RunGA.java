@@ -30,6 +30,7 @@ public class RunGA {
 		population.addAll(runAlg(init(rand)));
 		log.info("===Evolving Main Population===");
 		runAlg(population);
+		log.info("Done.");
 	}
 
 	private static List<DiceGenome> runAlg(List<DiceGenome> population) {
