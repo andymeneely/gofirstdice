@@ -10,7 +10,6 @@ import java.util.Random;
 import java.util.Set;
 
 import org.chaoticbits.gofirst.genetic.DiceGenome;
-import org.chaoticbits.gofirst.genetic.DiceGenomeTest;
 import org.junit.Test;
 
 public class DiceGenomeEquivalenceTest {

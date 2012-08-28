@@ -4,6 +4,7 @@ import static org.junit.Assert.assertArrayEquals;
 
 import java.util.List;
 
+import org.chaoticbits.gofirst.genetic.dicegenome.DiceGenomeTest;
 import org.junit.Test;
 
 public class PermutationCrossoverTest {

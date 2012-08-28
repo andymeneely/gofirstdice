@@ -1,4 +1,4 @@
-package org.chaoticbits.gofirst.genetic;
+package org.chaoticbits.gofirst.genetic.dicegenome;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.chaoticbits.gofirst.Die;
+import org.chaoticbits.gofirst.genetic.DiceGenome;
+import org.chaoticbits.gofirst.genetic.Pair;
 import org.junit.Test;
 
 public class DiceGenomeTest {
