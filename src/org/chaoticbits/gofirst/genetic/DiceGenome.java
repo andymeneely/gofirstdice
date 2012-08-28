@@ -119,8 +119,9 @@ public class DiceGenome implements Comparable<DiceGenome> {
 				return false; // else keep going
 		}
 		return true;
-		
-		@Override
+	}
+
+	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
