@@ -1,11 +1,7 @@
 package org.chaoticbits.gofirst.genetic.dicegenome;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
-
-import java.util.List;
 
 import org.chaoticbits.gofirst.genetic.DiceGenome;
 import org.junit.Before;

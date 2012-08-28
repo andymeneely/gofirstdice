@@ -9,7 +9,6 @@ import java.util.Random;
 
 import org.chaoticbits.gofirst.Die;
 import org.chaoticbits.gofirst.genetic.DiceGenome;
-import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
 import org.chaoticbits.gofirst.genetic.algorithm.Pair;
 import org.junit.Test;
 

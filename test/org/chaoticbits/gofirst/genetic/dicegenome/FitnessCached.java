@@ -1,7 +1,7 @@
 package org.chaoticbits.gofirst.genetic.dicegenome;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Random;
 

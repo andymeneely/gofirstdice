@@ -1,12 +1,15 @@
 package org.chaoticbits.gofirst.genetic;
 
+import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.CROSSOVER;
+import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.MUTANT;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.*;
+
 import org.chaoticbits.gofirst.Die;
 import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate;
 import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;

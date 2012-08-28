@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.chaoticbits.gofirst.genetic.DiceGenome;
-import org.chaoticbits.gofirst.genetic.SimulationEvaluator;
-import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 
 public class Simulation {
@@ -21,7 +19,7 @@ public class Simulation {
 
 	public static void main(String[] args) {
 		rand = new MersenneTwisterRNG();
-		DiceGenome genome = new DiceGenome(rand, new SimulationEvaluator(rand));
+		DiceGenome genome = new DiceGenome(rand, crafted);
 		List<Die> dice = genome.getDice();
 		simulate("All four", dice.get(0), dice.get(1), dice.get(2), dice.get(3));
 		for (int out = 0; out < dice.size(); out++) {
@@ -38,7 +36,7 @@ public class Simulation {
 					simulate("Only " + first + ", " + second, dice.get(first), dice.get(second));
 			}
 		}
-		System.out.println("Regular fitness: " + genome.toString());
+		System.out.println("Regular fitness: " + genome.getFitness());
 	}
 
 	private static void simulate(String description, Die... dice) {

@@ -1,5 +1,11 @@
 package org.chaoticbits.gofirst.genetic.dicegenome;
 
+import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.IMMIGRANT;
+import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.INIT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -9,8 +15,6 @@ import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate;
 import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
 import org.junit.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
-import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.*;
-import static org.junit.Assert.*;
 
 public class BirthCertificateTest {
 	private Random rand = new MersenneTwisterRNG(new byte[] { 0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa,
