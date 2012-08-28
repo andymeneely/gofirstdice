@@ -9,16 +9,21 @@ import java.util.Random;
 
 import org.chaoticbits.gofirst.Die;
 import org.chaoticbits.gofirst.genetic.DiceGenome;
-import org.chaoticbits.gofirst.genetic.IFitnessEvaluator;
-import org.chaoticbits.gofirst.genetic.Pair;
+import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
+import org.chaoticbits.gofirst.genetic.algorithm.Pair;
 import org.junit.Test;
 
 public class DiceGenomeTest {
 	private Random rand = new Random(123);
 
+	// Just 1..48
 	public static final List<Integer> NORMAL = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
 			18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
 			45, 46, 47, 48);
+	// Reversed normal
+	public static final List<Integer> REVERSE = Arrays.asList(48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35,
+			34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8,
+			7, 6, 5, 4, 3, 2, 1);
 	public static final List<Integer> INTERLEAVED = Arrays.asList(1, 13, 25, 37, 2, 14, 26, 38, 3, 15, 27, 39, 4, 16,
 			28, 40, 5, 17, 29, 41, 6, 18, 30, 42, 7, 19, 31, 43, 8, 20, 32, 44, 9, 21, 33, 45, 10, 22, 34, 46, 11, 23,
 			35, 47, 12, 24, 36, 48);
@@ -31,20 +36,17 @@ public class DiceGenomeTest {
 			18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 38, 37, 36, 39, 40, 41, 42, 43, 44,
 			45, 46, 47, 48);
 	// 1 and 2 are flipped
-	public static final List<Integer> TEST3 = Arrays.asList(2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 13, 12, 11, 14, 15, 16, 17,
+	public static final List<Integer> TEST3 = Arrays.asList(2, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
 			18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
 			45, 46, 47, 48);
-	public static final List<Integer> REVERSE = Arrays.asList(48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35,
-			34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8,
-			7, 6, 5, 4, 3, 2, 1);
 	// As if the crossover was at cut=14 from NORMAL to REVERSE
 	public static final List<Integer> NORMAL_CROSS_REVERSE_14 = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
 			13, 14, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24,
 			23, 22, 21, 20, 19, 18, 17, 16, 15);
 	// As if the crossover was at cut=14 from REVERSE to NORMAL
 	public static final List<Integer> REVERSE_CROSS_NORMAL_14 = Arrays.asList(48, 47, 46, 45, 44, 43, 42, 41, 40, 39,
-			38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 1, 2, 3, 4,
-			5, 6, 7, 8, 9, 10, 11, 12, 13, 14);
+			38, 37, 36, 35, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+			26, 27, 28, 29, 30, 31, 32, 33, 34);
 
 	@Test
 	public void getDiceWorksNormal() throws Exception {

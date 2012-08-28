@@ -36,7 +36,7 @@ public class PermutationCrossoverTest {
 	@Test
 	public void crossOverOpposite() throws Exception {
 		cut = 14;
-		DiceGenome child = normal.crossOver(reverse, cut);
+		DiceGenome child = reverse.crossOver(normal, cut);
 		DiceGenome expected = new DiceGenome(null, DiceGenomeTest.REVERSE_CROSS_NORMAL_14);
 		assertEquals(expected, child);
 		assertNotSame("child is a different object from parents", normal, child);
@@ -44,18 +44,18 @@ public class PermutationCrossoverTest {
 	}
 
 	@Test
-	public void crossOverAtBeginning() throws Exception {
+	public void cutAtBeginning() throws Exception {
 		cut = 0;
 		DiceGenome child = normal.crossOver(reverse, cut);
-		DiceGenome expected = new DiceGenome(null, DiceGenomeTest.NORMAL_CROSS_REVERSE_14);
+		DiceGenome expected = new DiceGenome(null, DiceGenomeTest.REVERSE);
 		assertEquals(expected, child);
 	}
 
 	@Test
-	public void crossOverAtEnd() throws Exception {
+	public void cutAtEnd() throws Exception {
 		cut = 47;
 		DiceGenome child = normal.crossOver(reverse, cut);
-		DiceGenome expected = new DiceGenome(null, DiceGenomeTest.NORMAL_CROSS_REVERSE_14);
+		DiceGenome expected = new DiceGenome(null, DiceGenomeTest.NORMAL);
 		assertEquals(expected, child);
 	}
 }

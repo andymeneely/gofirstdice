@@ -1,34 +1,44 @@
 package org.chaoticbits.gofirst;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+
+import org.chaoticbits.gofirst.genetic.DiceGenome;
+import org.chaoticbits.gofirst.genetic.SimulationEvaluator;
+import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
+import org.uncommons.maths.random.MersenneTwisterRNG;
 
 public class Simulation {
 
 	private static Random rand;
 
+	private static List<Integer> crafted = Arrays.asList(1, 8, 11, 14, 17, 24, 27, 30, 33, 40, 41, 47, //
+			2, 5, 12, 15, 18, 23, 26, 29, 36, 39, 42, 48, //
+			3, 6, 9, 16, 19, 22, 25, 32, 35, 38, 43, 46, //
+			4, 7, 10, 13, 20, 21, 28, 31, 34, 37, 44, 45);
+
 	public static void main(String[] args) {
-		rand = new Random();
-		Die[] dice = { new Die(new int[] { 1, 8, 11, 14, 17, 24, 27, 30, 33, 40, 41, 47 }), //
-				new Die(new int[] { 2, 5, 12, 15, 18, 23, 26, 29, 36, 39, 42, 48 }), //
-				new Die(new int[] { 3, 6, 9, 16, 19, 22, 25, 32, 35, 38, 43, 46 }), //
-				new Die(new int[] { 4, 7, 10, 13, 20, 21, 28, 31, 34, 37, 44, 45 }), //
-		};
-		simulate("All four", dice[0], dice[1], dice[2], dice[3]);
-		for (int out = 0; out < dice.length; out++) {
+		rand = new MersenneTwisterRNG();
+		DiceGenome genome = new DiceGenome(rand, new SimulationEvaluator(rand));
+		List<Die> dice = genome.getDice();
+		simulate("All four", dice.get(0), dice.get(1), dice.get(2), dice.get(3));
+		for (int out = 0; out < dice.size(); out++) {
 			ArrayList<Die> diceSubset = new ArrayList<Die>();
-			for (int i = 0; i < dice.length; i++) {
+			for (int i = 0; i < dice.size(); i++) {
 				if (i != out)
-					diceSubset.add(dice[i]);
+					diceSubset.add(dice.get(i));
 			}
 			simulate("Three, without " + out, diceSubset.toArray(new Die[] {}));
 		}
-		for (int first = 0; first < dice.length; first++) {
-			for (int second = first + 1; second < dice.length; second++) {
+		for (int first = 0; first < dice.size(); first++) {
+			for (int second = first + 1; second < dice.size(); second++) {
 				if (second != first)
-					simulate("Only " + first + ", " + second, dice[first], dice[second]);
+					simulate("Only " + first + ", " + second, dice.get(first), dice.get(second));
 			}
 		}
+		System.out.println("Regular fitness: " + genome.toString());
 	}
 
 	private static void simulate(String description, Die... dice) {

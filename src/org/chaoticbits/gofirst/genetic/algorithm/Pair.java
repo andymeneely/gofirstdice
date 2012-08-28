@@ -1,4 +1,4 @@
-package org.chaoticbits.gofirst.genetic;
+package org.chaoticbits.gofirst.genetic.algorithm;
 
 public class Pair<T> {
 	public T first;

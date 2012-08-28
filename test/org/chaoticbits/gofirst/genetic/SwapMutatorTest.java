@@ -6,6 +6,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 import java.util.Random;
 
+import org.chaoticbits.gofirst.genetic.algorithm.Pair;
+import org.chaoticbits.gofirst.genetic.algorithm.SwapMutator;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.junit.Before;

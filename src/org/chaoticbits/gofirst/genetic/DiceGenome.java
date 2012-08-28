@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-
+import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.*;
 import org.chaoticbits.gofirst.Die;
+import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate;
+import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
+import org.chaoticbits.gofirst.genetic.algorithm.Pair;
 
 public class DiceGenome implements Comparable<DiceGenome> {
 	public static final Integer NUM_SIDES = 12;
@@ -17,21 +20,39 @@ public class DiceGenome implements Comparable<DiceGenome> {
 	private final List<Integer> genome = new ArrayList<Integer>(NUM_SIDES * NUM_DICE);
 	private final IFitnessEvaluator<DiceGenome> evaluator;
 	private final Random rand;
+	private final BirthCertificate<DiceGenome> birthCertificate;
 	private Double fitness = null;
 
-	public DiceGenome(Random rand, IFitnessEvaluator<DiceGenome> evaluator) {
+	public DiceGenome(Random rand, IFitnessEvaluator<DiceGenome> evaluator,
+			BirthCertificate<DiceGenome> birthCertificate) {
+		init(rand);
 		this.rand = rand;
-		initDie(rand);
 		this.evaluator = evaluator;
+		this.birthCertificate = birthCertificate;
+	}
+
+	public DiceGenome(Random rand, IFitnessEvaluator<DiceGenome> evaluator) {
+		init(rand);
+		this.rand = rand;
+		this.evaluator = evaluator;
+		this.birthCertificate = new BirthCertificate<DiceGenome>(); // default (INIT)
 	}
 
 	public DiceGenome(Random rand, List<Integer> sides) {
 		genome.addAll(sides);
 		this.rand = rand;
 		evaluator = new SimulationEvaluator(rand);
+		this.birthCertificate = new BirthCertificate<DiceGenome>(); // default (INIT)
 	}
 
-	private void initDie(Random rand) {
+	public DiceGenome(Random rand, BirthCertificate<DiceGenome> birthCertificate, List<Integer> sides) {
+		genome.addAll(sides);
+		this.rand = rand;
+		evaluator = new SimulationEvaluator(rand);
+		this.birthCertificate = birthCertificate;
+	}
+
+	private void init(Random rand) {
 		for (int i = 1; i <= NUM_SIDES * NUM_DICE; i++)
 			genome.add(i);
 		Collections.shuffle(genome, rand);
@@ -79,7 +100,7 @@ public class DiceGenome implements Comparable<DiceGenome> {
 			mutant.set(pair.first, mutant.get(pair.second));
 			mutant.set(pair.second, temp);
 		}
-		return new DiceGenome(rand, mutant);
+		return new DiceGenome(rand, new BirthCertificate<DiceGenome>(this, MUTANT), mutant);
 	}
 
 	/**
@@ -98,7 +119,7 @@ public class DiceGenome implements Comparable<DiceGenome> {
 			if (!child.contains(other.genome.get(j)/* mmm, tasty encapsulation violation */))
 				child.add(other.genome.get(j));
 		}
-		return new DiceGenome(rand, child);
+		return new DiceGenome(rand, new BirthCertificate<DiceGenome>(this, CROSSOVER), child);
 	}
 
 	/**
@@ -114,6 +135,15 @@ public class DiceGenome implements Comparable<DiceGenome> {
 		return fitness;
 	}
 
+	/**
+	 * Returns a the birth certificate of this genome. You can traverse the entire history of the genome via
+	 * the parent field.
+	 * @return
+	 */
+	public BirthCertificate<DiceGenome> getBirthCertificate() {
+		return birthCertificate;
+	}
+
 	@Override
 	public int compareTo(DiceGenome o) {
 		return -1 * getFitness().compareTo(o.getFitness()); // sort in reverse order - highest first
@@ -121,7 +151,7 @@ public class DiceGenome implements Comparable<DiceGenome> {
 
 	@Override
 	public String toString() {
-		return "fit=" + getFitness() + ";" + genome.toString();
+		return "fit=" + fitness + ";" + genome.toString();
 	}
 
 	/**

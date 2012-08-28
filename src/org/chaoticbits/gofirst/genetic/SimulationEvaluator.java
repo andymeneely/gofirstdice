@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.chaoticbits.gofirst.Die;
+import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
 
 /**
  * Fitness function for DiceGenomes. Based on simulations. See the main fitness function comment for

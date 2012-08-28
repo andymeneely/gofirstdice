@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.chaoticbits.gofirst.genetic.algorithm.SwapMutator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 
 public class RunGA {
