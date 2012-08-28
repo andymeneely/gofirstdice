@@ -57,6 +57,8 @@ public class DiceGenome implements Comparable<DiceGenome> {
 	/**
 	 * Returns the internal genome representation, as a list of integers
 	 * 
+	 * Violates the immuatability of the object - hence the deprecation
+	 * 
 	 * @return
 	 */
 	@Deprecated
@@ -80,10 +82,32 @@ public class DiceGenome implements Comparable<DiceGenome> {
 		return new DiceGenome(rand, mutant);
 	}
 
-	public Double fitness() {
-		return evaluator.fitness(this);
+	/**
+	 * Create new child that starts with this genome, up to the cut index, then copies everything else from
+	 * the other genome. The permutation is still intact - no two numbers are repeated.
+	 * @param other
+	 * @param cut
+	 * @return
+	 */
+	public DiceGenome crossOver(DiceGenome other, int cut) {
+		List<Integer> child = new ArrayList<Integer>();
+		for (int i = 0; i < cut; i++) {
+			child.add(genome.get(i));
+		}
+		for (int j = 0; j < other.genome.size(); j++) {
+			if (!child.contains(other.genome.get(j)/* mmm, tasty encapsulation violation */))
+				child.add(other.genome.get(j));
+		}
+		return new DiceGenome(rand, child);
 	}
 
+	/**
+	 * Returns the fitness of the genome, according to the {@link IFitnessEvaluator} given.
+	 * 
+	 * Since the genome is immutable, this fitness gets computed once and then cached.
+	 * 
+	 * @return
+	 */
 	public Double getFitness() {
 		if (fitness == null)
 			fitness = evaluator.fitness(this);

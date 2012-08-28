@@ -65,13 +65,12 @@ public class RunGA {
 
 	private static void crossover(List<DiceGenome> population) {
 		log.info("Crossing over...");
-		PermutationCrossover crossover = new PermutationCrossover();
 		for (int i = 0; i < NUM_CROSSOVER_PER_GEN; i++) {
 			int cut = rand.nextInt(DiceGenome.SIZE);
-			List<Integer> first = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN)).getGenome();
-			List<Integer> second = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN)).getGenome();
-			population.add(new DiceGenome(rand, crossover.crossOver(first, second, cut)));
-			population.add(new DiceGenome(rand, crossover.crossOver(second, first, cut)));
+			DiceGenome first = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN));
+			DiceGenome second = population.get(rand.nextInt(NUM_CROSSOVER_PER_GEN));
+			population.add(first.crossOver(second, cut));
+			population.add(second.crossOver(first, cut));
 		}
 		Collections.sort(population); // sort by highest fitness
 	}
