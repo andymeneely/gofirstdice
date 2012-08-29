@@ -4,7 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.chaoticbits.gofirst.genetic.DiceGenome;
 
+/**
+ * A mutator that generates a list of swap operations for a stratified genome like {@link DiceGenome}. Given
+ * the length, the swaps will always be in a different stratum than the current stratum.
+ * @author andy
+ * 
+ */
 public class SwapMutator {
 
 	private final Random rand;

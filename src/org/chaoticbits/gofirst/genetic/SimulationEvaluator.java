@@ -9,7 +9,8 @@ import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
 /**
  * Fitness function for DiceGenomes. Based on simulations. See the main fitness function comment for
  * algorithmic details.
- * @author andy
+ * 
+ * @author Andy Meneely
  * 
  */
 public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {

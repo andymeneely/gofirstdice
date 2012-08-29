@@ -8,6 +8,12 @@ import java.util.Random;
 import org.chaoticbits.gofirst.genetic.DiceGenome;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 
+/**
+ * A first crack at hand-crafting a GoFirst die, and checking the simulations and fitness
+ * 
+ * @author Andy Meneely
+ * 
+ */
 public class Simulation {
 
 	private static Random rand;

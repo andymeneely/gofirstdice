@@ -16,6 +16,18 @@ import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type;
 import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
 import org.chaoticbits.gofirst.genetic.algorithm.Pair;
 
+/**
+ * Implementation of the GoFirst dice as a genome. This genome contains the main internal representation of
+ * the genome - a list of integers. This list of integers is a permutation of 1..SIZE, or 1..48 for 4-player,
+ * 12-sided dice.
+ * 
+ * This genome also implements the permutation crossover algorithm, and a mutation operator executed by a
+ * stratified swap. It also keeps a "birth certificate" of each genome, along with a pointer to that genome's
+ * parent(s), so that the geneology of a genome is kept for tweaking the genetic algorithm.
+ * 
+ * @author Andy Meneely
+ * 
+ */
 public class DiceGenome implements Comparable<DiceGenome> {
 	public static final Integer NUM_SIDES = 12;
 	public static final Integer NUM_DICE = 4;
@@ -77,18 +89,6 @@ public class DiceGenome implements Comparable<DiceGenome> {
 			dice.add(new Die(sides));
 		}
 		return dice;
-	}
-
-	/**
-	 * Returns the internal genome representation, as a list of integers
-	 * 
-	 * Violates the immuatability of the object - hence the deprecation
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public List<Integer> getGenome() {
-		return genome;
 	}
 
 	/**

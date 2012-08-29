@@ -5,7 +5,8 @@ import java.util.Random;
 /**
  * A RNG transformer that takes a normally-distributed number and scales it to a discrete ranking. Mean is
  * centered at rank 0, and the least likely is at max-1
- * @author andy
+ * 
+ * @author Andy Meneely
  * 
  */
 public class GaussianRNGTransformer {
