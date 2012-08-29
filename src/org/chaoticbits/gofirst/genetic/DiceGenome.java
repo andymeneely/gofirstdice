@@ -155,7 +155,20 @@ public class DiceGenome implements Comparable<DiceGenome> {
 
 	@Override
 	public String toString() {
-		return "fit=" + fitness + ";" + genome.toString();
+		return "fit=" + fitness + ";" + genomeSortedByDie();
+	}
+
+	private String genomeSortedByDie() {
+		List<Integer> list = new ArrayList<Integer>();
+		for (int die = 0; die < NUM_DICE; die++) {
+			List<Integer> subList = new ArrayList<Integer>();
+			for (int side = NUM_SIDES * die; side < NUM_SIDES * (die + 1); side++) {
+				subList.add(genome.get(side));
+			}
+			Collections.sort(subList);
+			list.addAll(subList);
+		}
+		return list.toString();
 	}
 
 	/**
