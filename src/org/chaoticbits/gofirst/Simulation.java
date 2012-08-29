@@ -28,6 +28,10 @@ public class Simulation {
 			3, 6, 12, 13, 17, 24, 25, 32, 36, 37, 43, 46, //
 			4, 5, 9, 16, 20, 21, 28, 29, 33, 40, 44, 45);
 
+	private static List<Integer> anotherTest = Arrays.asList(14, 33, 45, 24, 35, 16, 8, 9, 2, 39, 22, 44, 46, 5, 38,
+			40, 12, 18, 34, 37, 17, 3, 25, 20, 21, 1, 31, 27, 19, 13, 43, 47, 15, 42, 7, 28, 4, 26, 11, 32, 29, 41, 10,
+			6, 23, 48, 36, 30);
+
 	public static void main(String[] args) {
 		rand = new MersenneTwisterRNG();
 		DiceGenome genome = new DiceGenome(rand, actualGoFirst);
@@ -47,7 +51,8 @@ public class Simulation {
 					simulate("Only " + first + ", " + second, dice.get(first), dice.get(second));
 			}
 		}
-		System.out.println("Regular fitness: " + genome.getFitness());
+		genome.getFitness();
+		System.out.println("Fitness: " + genome);
 	}
 
 	private static void simulate(String description, Die... dice) {
