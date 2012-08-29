@@ -66,7 +66,8 @@ public class RunGA {
 	private static void immigrate(List<DiceGenome> population) {
 		log.info("Immigrating...");
 		for (int i = 0; i < NUM_IMMIGRANTS_PER_GEN; i++) {
-			population.add(new DiceGenome(rand, evaluator, new BirthCertificate<DiceGenome>(Type.IMMIGRANT, (new DiceGenome[]{}))));
+			population.add(new DiceGenome(rand, evaluator, new BirthCertificate<DiceGenome>(Type.IMMIGRANT,
+					(new DiceGenome[] {}))));
 		}
 	}
 
@@ -100,18 +101,18 @@ public class RunGA {
 	private static void report(int gen, List<DiceGenome> sortedPop) {
 		log.info("Reporting...");
 		DiceGenome best = sortedPop.get(0);
-		System.out.println("gen=" + gen + ", highest: " + best);
+		log.info("gen=" + gen + ", highest: " + best);
 		outputHistory(best);
-		System.out.println("gen=" + gen + ", median: " + sortedPop.get(500));
+		log.info("gen=" + gen + ", median: " + sortedPop.get(500));
 	}
 
 	private static void outputHistory(DiceGenome descendant) {
-		System.out.println("History of the highest (BFS-style)...");
+		log.info("History of the highest (BFS-style)...");
 		List<DiceGenome> queue = new LinkedList<DiceGenome>();
 		queue.add(descendant);
 		while (!queue.isEmpty()) {
 			DiceGenome current = queue.remove(0);
-			System.out.println("\t" + current.getBirthCertificate().getType());
+			log.info("\t" + current.getBirthCertificate().getType());
 			if (current.getBirthCertificate().getParents() != null) {
 				for (DiceGenome parent : current.getBirthCertificate().getParents()) {
 					queue.add(parent);
