@@ -117,7 +117,7 @@ public class RunGA {
 	private static void report(int gen, List<DiceGenome> sortedPop) {
 		log.info("Reporting...");
 		DiceGenome best = sortedPop.get(0);
-		outputHistory(best);
+		// outputHistory(best);
 		log.info("gen=" + gen + ", highest: " + best);
 		log.info("gen=" + gen + ", median: " + sortedPop.get(POPULATION_SIZE / 2));
 	}
