@@ -3,7 +3,6 @@ package org.chaoticbits.gofirst.genetic.dicegenome;
 import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.IMMIGRANT;
 import static org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type.INIT;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.ArrayList;
