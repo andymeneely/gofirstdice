@@ -23,9 +23,14 @@ public class Simulation {
 			3, 6, 9, 16, 19, 22, 25, 32, 35, 38, 43, 46, //
 			4, 7, 10, 13, 20, 21, 28, 31, 34, 37, 44, 45);
 
+	private static List<Integer> actualGoFirst = Arrays.asList(1, 8, 11, 14, 19, 22, 27, 30, 35, 38, 41, 48, //
+			2, 7, 10, 15, 18, 23, 26, 31, 34, 39, 42, 47, //
+			3, 6, 12, 13, 17, 24, 25, 32, 36, 37, 43, 46, //
+			4, 5, 9, 16, 20, 21, 28, 29, 33, 40, 44, 45);
+
 	public static void main(String[] args) {
 		rand = new MersenneTwisterRNG();
-		DiceGenome genome = new DiceGenome(rand, crafted);
+		DiceGenome genome = new DiceGenome(rand, actualGoFirst);
 		List<Die> dice = genome.getDice();
 		simulate("All four", dice.get(0), dice.get(1), dice.get(2), dice.get(3));
 		for (int out = 0; out < dice.size(); out++) {
