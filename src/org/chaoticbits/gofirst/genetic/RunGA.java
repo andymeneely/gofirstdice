@@ -36,11 +36,26 @@ public class RunGA {
 		for (int subpop = 0; subpop < NUM_SUBPOPS; subpop++) {
 			log.info("=== Sub-population #" + subpop + " ===");
 			List<DiceGenome> subPop = runAlg(init(rand));
-			mainPopulation.addAll(subPop);
+			merge(mainPopulation, subPop);
 		}
 		log.info("=== Evolving Main Population ===");
 		runAlg(mainPopulation);
 		log.info("Done.");
+	}
+
+	private static void merge(List<DiceGenome> mainPopulation, List<DiceGenome> subPop) {
+		GaussianRNGTransformer rng = new GaussianRNGTransformer(rand);
+		log.info("Merging subpopulation with main population...");
+		for (DiceGenome diceGenome : subPop) { // cross everyone in the subpop with the main pop
+			int cut = rand.nextInt(DiceGenome.SIZE);
+			int mainIndex = rng.nextInt(mainPopulation.size());
+			mainPopulation.add(mainPopulation.get(mainIndex).crossOver(diceGenome, cut));
+			mainPopulation.add(diceGenome.crossOver(mainPopulation.get(mainIndex), cut));
+
+		}
+		mainPopulation.addAll(subPop); // also, add the subpop anyway
+		log.info("Sorting main population...");
+		Collections.sort(mainPopulation);
 	}
 
 	private static List<DiceGenome> runAlg(List<DiceGenome> population) {
@@ -102,8 +117,8 @@ public class RunGA {
 	private static void report(int gen, List<DiceGenome> sortedPop) {
 		log.info("Reporting...");
 		DiceGenome best = sortedPop.get(0);
-		log.info("gen=" + gen + ", highest: " + best);
 		outputHistory(best);
+		log.info("gen=" + gen + ", highest: " + best);
 		log.info("gen=" + gen + ", median: " + sortedPop.get(POPULATION_SIZE / 2));
 	}
 
