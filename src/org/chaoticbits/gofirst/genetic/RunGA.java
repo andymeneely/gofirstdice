@@ -1,28 +1,34 @@
 package org.chaoticbits.gofirst.genetic;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 import org.apache.log4j.PropertyConfigurator;
+import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate;
+import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type;
 import org.chaoticbits.gofirst.genetic.algorithm.GaussianRNGTransformer;
 import org.chaoticbits.gofirst.genetic.algorithm.SwapMutator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 
 public class RunGA {
+
 	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RunGA.class);
 	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
 	private static final int NUM_FITNESS_TRIALS = 1000;
 	public static final int POPULATION_SIZE = 1000;
-	public static final int NUM_GENERATIONS = 10;
+	public static final int NUM_GENERATIONS = 100;
 	public static final int MUTATION_SWAPS = 1;
 	public static final int NUM_MUTANTS_PER_GEN = 500;
-	public static final int NUM_IMMIGRANTS_PER_GEN = 200;
-	public static final int NUM_CROSSOVER_PER_GEN = 200;
+	public static final int NUM_IMMIGRANTS_PER_GEN = 300;
+	public static final int NUM_CROSSOVER_PER_GEN = 300;
 	private static final SimulationEvaluator evaluator = new SimulationEvaluator(rand, NUM_FITNESS_TRIALS);
 
 	public static void main(String[] args) {
+		System.setProperty("current.timestamp", new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.S").format(new Date()));
 		PropertyConfigurator.configure("log4j.properties");
 		log.info("===First population===");
 		List<DiceGenome> population = runAlg(init(rand));
@@ -59,7 +65,7 @@ public class RunGA {
 	private static void immigrate(List<DiceGenome> population) {
 		log.info("Immigrating...");
 		for (int i = 0; i < NUM_IMMIGRANTS_PER_GEN; i++) {
-			population.add(new DiceGenome(rand, evaluator));
+			population.add(new DiceGenome(rand, evaluator, new BirthCertificate<DiceGenome>(null, Type.IMMIGRANT)));
 		}
 	}
 
