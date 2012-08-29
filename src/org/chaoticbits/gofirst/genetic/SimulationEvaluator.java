@@ -26,7 +26,7 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 
 	public SimulationEvaluator(Random rand, int numTrials) {
 		this.rand = rand;
-		this.numTrials = DEFAULT_NUM_TRIALS;
+		this.numTrials = numTrials;
 	}
 
 	/**
