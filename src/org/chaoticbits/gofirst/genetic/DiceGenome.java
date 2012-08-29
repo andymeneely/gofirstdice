@@ -167,16 +167,18 @@ public class DiceGenome implements Comparable<DiceGenome> {
 	 * @return
 	 */
 	public boolean equivalent(DiceGenome other) {
+		Set<Set<Integer>> myDice = new HashSet<Set<Integer>>();
+		Set<Set<Integer>> hisDice = new HashSet<Set<Integer>>();
 		for (int die = 0; die < NUM_DICE; die++) {
-			Set<Integer> mine = new HashSet<Integer>(), his = new HashSet<Integer>();
+			Set<Integer> myDie = new HashSet<Integer>(), hisDie = new HashSet<Integer>();
 			for (int side = NUM_SIDES * die; side < NUM_SIDES * (die + 1); side++) {
-				mine.add(genome.get(side));
-				his.add(other.genome.get(side) /* mmm, tasty encapsulation breakage */);
+				myDie.add(genome.get(side));
+				hisDie.add(other.genome.get(side) /* mmm, tasty encapsulation breakage */);
 			}
-			if (!mine.equals(his))
-				return false; // else keep going
+			myDice.add(myDie);
+			hisDice.add(hisDie);
 		}
-		return true;
+		return myDice.equals(hisDice);
 	}
 
 	@Override
