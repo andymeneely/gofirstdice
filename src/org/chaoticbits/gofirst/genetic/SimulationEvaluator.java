@@ -15,7 +15,7 @@ import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
  */
 public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 
-	public static final long DEFAULT_NUM_TRIALS = 10000;
+	public static final long DEFAULT_NUM_TRIALS = 100000;
 	private final long numTrials;
 	private final Random rand;
 
