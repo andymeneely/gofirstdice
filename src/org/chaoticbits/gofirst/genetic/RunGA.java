@@ -66,7 +66,7 @@ public class RunGA {
 	private static void immigrate(List<DiceGenome> population) {
 		log.info("Immigrating...");
 		for (int i = 0; i < NUM_IMMIGRANTS_PER_GEN; i++) {
-			population.add(new DiceGenome(rand, evaluator, new BirthCertificate<DiceGenome>(Type.IMMIGRANT, null)));
+			population.add(new DiceGenome(rand, evaluator, new BirthCertificate<DiceGenome>(Type.IMMIGRANT, (new DiceGenome[]{}))));
 		}
 	}
 

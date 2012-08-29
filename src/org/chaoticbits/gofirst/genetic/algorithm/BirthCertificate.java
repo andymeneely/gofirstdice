@@ -15,11 +15,6 @@ public class BirthCertificate<T> {
 	private final Type type;
 	private final T[] parents;
 
-	public BirthCertificate() {
-		this.parents = null;
-		this.type = Type.INIT;
-	}
-
 	public BirthCertificate(Type type, T... parents) {
 		this.parents = parents;
 		this.type = type;

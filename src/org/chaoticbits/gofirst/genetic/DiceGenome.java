@@ -12,6 +12,7 @@ import java.util.Set;
 
 import org.chaoticbits.gofirst.Die;
 import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate;
+import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type;
 import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
 import org.chaoticbits.gofirst.genetic.algorithm.Pair;
 
@@ -38,14 +39,14 @@ public class DiceGenome implements Comparable<DiceGenome> {
 		init(rand);
 		this.rand = rand;
 		this.evaluator = evaluator;
-		this.birthCertificate = new BirthCertificate<DiceGenome>(); // default (INIT)
+		this.birthCertificate = new BirthCertificate<DiceGenome>(Type.INIT, new DiceGenome[] {});
 	}
 
 	public DiceGenome(Random rand, List<Integer> sides) {
 		genome.addAll(sides);
 		this.rand = rand;
 		evaluator = new SimulationEvaluator(rand);
-		this.birthCertificate = new BirthCertificate<DiceGenome>(); // default (INIT)
+		this.birthCertificate = new BirthCertificate<DiceGenome>(Type.INIT, new DiceGenome[] {});
 	}
 
 	public DiceGenome(Random rand, BirthCertificate<DiceGenome> birthCertificate, List<Integer> sides) {
