@@ -2,8 +2,6 @@ package org.chaoticbits.gofirst.genetic.dicegenome;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
-
 import org.chaoticbits.gofirst.genetic.DiceGenome;
 import org.junit.Test;
 
