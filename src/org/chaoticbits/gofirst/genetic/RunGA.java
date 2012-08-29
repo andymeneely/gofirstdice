@@ -19,26 +19,27 @@ public class RunGA {
 
 	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RunGA.class);
 	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
-	private static final int NUM_FITNESS_TRIALS = 1000;
+	private static final int NUM_FITNESS_TRIALS = 10000;
 	public static final int POPULATION_SIZE = 1000;
-	public static final int NUM_GENERATIONS = 100;
+	public static final int NUM_GENERATIONS = 30;
 	public static final int MUTATION_SWAPS = 1;
-	public static final int NUM_MUTANTS_PER_GEN = 500;
+	public static final int NUM_MUTANTS_PER_GEN = 300;
 	public static final int NUM_IMMIGRANTS_PER_GEN = 300;
 	public static final int NUM_CROSSOVER_PER_GEN = 300;
+	public static final int NUM_SUBPOPS = 5;
 	private static final SimulationEvaluator evaluator = new SimulationEvaluator(rand, NUM_FITNESS_TRIALS);
 
 	public static void main(String[] args) {
 		System.setProperty("current.timestamp", new SimpleDateFormat("yyyy-MM-dd-HH.mm.ss.S").format(new Date()));
 		PropertyConfigurator.configure("log4j.properties");
-		log.info("===First population===");
-		List<DiceGenome> population = runAlg(init(rand));
-		log.info("===Second population===");
-		population.addAll(runAlg(init(rand)));
-		log.info("===Third population===");
-		population.addAll(runAlg(init(rand)));
-		log.info("===Evolving Main Population===");
-		runAlg(population);
+		List<DiceGenome> mainPopulation = new ArrayList<DiceGenome>(NUM_SUBPOPS * POPULATION_SIZE);
+		for (int subpop = 0; subpop < NUM_SUBPOPS; subpop++) {
+			log.info("=== Sub-population #" + subpop + " ===");
+			List<DiceGenome> subPop = runAlg(init(rand));
+			mainPopulation.addAll(subPop);
+		}
+		log.info("=== Evolving Main Population ===");
+		runAlg(mainPopulation);
 		log.info("Done.");
 	}
 
@@ -103,7 +104,7 @@ public class RunGA {
 		DiceGenome best = sortedPop.get(0);
 		log.info("gen=" + gen + ", highest: " + best);
 		outputHistory(best);
-		log.info("gen=" + gen + ", median: " + sortedPop.get(500));
+		log.info("gen=" + gen + ", median: " + sortedPop.get(POPULATION_SIZE / 2));
 	}
 
 	private static void outputHistory(DiceGenome descendant) {
