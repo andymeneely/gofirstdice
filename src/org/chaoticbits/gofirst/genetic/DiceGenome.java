@@ -103,7 +103,7 @@ public class DiceGenome implements Comparable<DiceGenome> {
 			mutant.set(pair.first, mutant.get(pair.second));
 			mutant.set(pair.second, temp);
 		}
-		return new DiceGenome(rand, new BirthCertificate<DiceGenome>(this, MUTANT), mutant);
+		return new DiceGenome(rand, new BirthCertificate<DiceGenome>(MUTANT, this), mutant);
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class DiceGenome implements Comparable<DiceGenome> {
 			if (!child.contains(other.genome.get(j)/* mmm, tasty encapsulation violation */))
 				child.add(other.genome.get(j));
 		}
-		return new DiceGenome(rand, new BirthCertificate<DiceGenome>(this, CROSSOVER), child);
+		return new DiceGenome(rand, new BirthCertificate<DiceGenome>(CROSSOVER, this, other), child);
 	}
 
 	/**

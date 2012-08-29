@@ -25,16 +25,15 @@ public class BirthCertificateTest {
 	public void originalIsInit() throws Exception {
 		DiceGenome genome = new DiceGenome(rand, evaluator);
 		assertEquals(INIT, genome.getBirthCertificate().getType());
-		assertNull(genome.getBirthCertificate().getParent());
+		assertNull(genome.getBirthCertificate().getParents());
 	}
 
 	@Test
 	public void givenIsGiven() throws Exception {
 		DiceGenome parent = new DiceGenome(rand, new ArrayList<Integer>());
-		DiceGenome genome = new DiceGenome(rand, evaluator, new BirthCertificate<DiceGenome>(parent, IMMIGRANT));
+		DiceGenome genome = new DiceGenome(rand, evaluator, new BirthCertificate<DiceGenome>(IMMIGRANT, parent));
 		assertEquals(IMMIGRANT, genome.getBirthCertificate().getType());
-		assertSame(parent, genome.getBirthCertificate().getParent());
+		assertSame(parent, genome.getBirthCertificate().getParents());
 	}
-	
-	
+
 }
