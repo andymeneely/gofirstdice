@@ -31,14 +31,20 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 
 	/**
 	 * Given the genome, compute the fitness by simluating dice rolls. Given numTrials (from the
-	 * constructor), roll the dice for numTrials times, and count the number of victories for each player.
-	 * Then divide numTrials by the number of players - that's the expected number of victories for each
-	 * player. Take the total number of victories for each player minus the expected number of victories, and
-	 * average the percentage correct.
+	 * constructor). Here's the algorithm:
 	 * 
-	 * Do this for each combination of players, up to DiceGenome.NUM_DICE. For example, all four players.
-	 * Then all three combinations of three players. Then all combinations of two players. Do an unweighted
-	 * average of each of those and that's your fitness.
+	 * <ol>
+	 * <li>Roll all of the dice for numTrials times</li>
+	 * <li>Count the number of victories for each player</li>
+	 * <li>Compute E(Victories), i.e. the expected number of victories for each player (numTrials/numDice)</li>
+	 * <li>Compute the 1.0 - |E(Victories) - Victories|/(numTrials*2), or the absolute value of the
+	 * difference between expected and actual, times two (since we double-counted), and subtract from the
+	 * maximum 1.0 since we want high fitness.
+	 * <li>
+	 * </ol>
+	 * 
+	 * There is no need to compute inner combinations of fewer players than dice, since it's as if you did
+	 * roll the die, but then ignored it.
 	 * 
 	 * A poor fitness will be about 94%, and a great fitness is 99.99%
 	 * 
@@ -47,12 +53,7 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 	 */
 	public Double fitness(DiceGenome genome) {
 		List<Die> dice = genome.getDice();
-		double fitness = 0;
-		fitness += compute(fourPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
-//		fitness += compute(threePlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
-//		fitness += compute(twoPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
-//		return fitness / 3.0d; // unweighted average
-		return fitness;
+		return compute(fourPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
 	}
 
 	private long[] fourPlayer(List<Die> dice, long[] victories) {
@@ -67,48 +68,6 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 				}
 			}
 			victories[victor]++;
-		}
-		return victories;
-	}
-
-	private long[] threePlayer(List<Die> dice, long[] victories) {
-		for (long trial = 0; trial < numTrials; trial++) {
-			for (int playerOut = 0; playerOut < victories.length; playerOut++) {
-				int victor = -1;
-				int highest = -1;
-				for (int player = 0; player < dice.size(); player++) {
-					if (player != playerOut) { // skip over one player
-						int roll = dice.get(player).roll(rand);
-						if (roll > highest) {
-							victor = player;
-							highest = roll;
-						}
-					}
-				}
-				victories[victor]++;
-			}
-		}
-		return victories;
-	}
-
-	private long[] twoPlayer(List<Die> dice, long[] victories) {
-		for (long trial = 0; trial < numTrials; trial++) {
-			for (int playerOut1 = 0; playerOut1 < victories.length - 1; playerOut1++) {
-				for (int playerOut2 = playerOut1 + 1; playerOut2 < victories.length; playerOut2++) {
-					int victor = -1;
-					int highest = -1;
-					for (int player = 0; player < dice.size(); player++) {
-						if (player != playerOut1 && player != playerOut2) { // skip over two players
-							int roll = dice.get(player).roll(rand);
-							if (roll > highest) {
-								victor = player;
-								highest = roll;
-							}
-						}
-					}
-					victories[victor]++;
-				}
-			}
 		}
 		return victories;
 	}
