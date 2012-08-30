@@ -32,46 +32,14 @@ public class Simulation {
 			12, 14, 29, 30, 33, 41, 44, 46, 2, 9, 16, 17, 18, 24, 26, 34, 36, 39, 42, 43, 1, 4, 6, 10, 20, 22, 27, 28,
 			31, 37, 45, 48);
 
+	private static List<Integer> candidate = Arrays.asList(5, 13, 15, 19, 21, 23, 25, 32, 35, 38, 40, 47, 3, 7, 8, 11,
+			12, 14, 29, 30, 33, 41, 44, 46, 2, 9, 16, 17, 18, 24, 26, 34, 36, 39, 42, 43, 1, 4, 6, 10, 20, 22, 27, 28,
+			31, 37, 45, 48);
+
 	public static void main(String[] args) {
 		rand = new MersenneTwisterRNG();
-		DiceGenome genome = new DiceGenome(rand, bestYet);
-		List<Die> dice = genome.getDice();
-		simulate("All four", dice.get(0), dice.get(1), dice.get(2), dice.get(3));
-		for (int out = 0; out < dice.size(); out++) {
-			ArrayList<Die> diceSubset = new ArrayList<Die>();
-			for (int i = 0; i < dice.size(); i++) {
-				if (i != out)
-					diceSubset.add(dice.get(i));
-			}
-			simulate("Three, without " + out, diceSubset.toArray(new Die[] {}));
-		}
-		for (int first = 0; first < dice.size(); first++) {
-			for (int second = first + 1; second < dice.size(); second++) {
-				if (second != first)
-					simulate("Only " + first + ", " + second, dice.get(first), dice.get(second));
-			}
-		}
-		genome.getFitness();
-		System.out.println("Fitness: " + genome);
-	}
-
-	private static void simulate(String description, Die... dice) {
-		System.out.println("Simulation for " + description);
-		int[] victories = new int[] { 0, 0, 0, 0 };
-		for (long trial = 0; trial < 4 * 4 * 100000; trial++) {
-			int victor = -1;
-			int highest = -1;
-			for (int i = 0; i < dice.length; i++) {
-				int roll = dice[i].roll(rand);
-				if (roll > highest) {
-					victor = i;
-					highest = roll;
-				}
-			}
-			victories[victor]++;
-		}
-		for (int i = 0; i < victories.length; i++) {
-			System.out.println("\t# victories for " + i + " was " + victories[i]);
-		}
+		DiceGenome genome = new DiceGenome(rand, candidate);
+		genome.getFitness(); // hit the cache
+		System.out.println("Candidate:\n " + genome);
 	}
 }
