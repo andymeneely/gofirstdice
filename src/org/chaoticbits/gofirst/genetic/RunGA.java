@@ -41,7 +41,14 @@ public class RunGA {
 		}
 		log.info("=== Evolving Main Population ===");
 		runAlg(mainPopulation);
+		output(mainPopulation);
 		log.info("Done.");
+	}
+
+	private static void output(List<DiceGenome> mainPopulation) {
+		for (DiceGenome diceGenome : mainPopulation) {
+			System.out.println(diceGenome);
+		}
 	}
 
 	private static void merge(List<DiceGenome> mainPopulation, List<DiceGenome> subPop) {
