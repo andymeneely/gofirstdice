@@ -11,10 +11,19 @@ public class SimulationEvaluatorTest {
 
 	@Test
 	public void testComputeNormal() throws Exception {
-		// normal means: die[0] < die[1] < die[2] < die[3]
+		// normal: die[0] < die[1] < die[2] < die[3] always
 		// which means that it's really, really lopsided
 		Random rand = new Random(123);
 		Double fitness = new SimulationEvaluator(rand).fitness(new DiceGenome(rand, DiceGenomeTest.NORMAL));
+		assertEquals("fitness is terrible, only 25% on average", 0.25, fitness, 0.01);
+	}
+	
+	@Test
+	public void testComputeReverse() throws Exception {
+		// normal: die[0] > die[1] > die[2] > die[3] always
+		// which means that it's really, really lopsided
+		Random rand = new Random(123);
+		Double fitness = new SimulationEvaluator(rand).fitness(new DiceGenome(rand, DiceGenomeTest.REVERSE));
 		assertEquals("fitness is terrible, only 25% on average", 0.25, fitness, 0.01);
 	}
 
@@ -23,6 +32,6 @@ public class SimulationEvaluatorTest {
 		// interleaved is a little better
 		Random rand = new Random(123);
 		Double fitness = new SimulationEvaluator(rand).fitness(new DiceGenome(rand, DiceGenomeTest.INTERLEAVED));
-		assertEquals("fitness is better", 0.836, fitness, 0.001);
+		assertEquals("fitness is better", 0.901, fitness, 0.001);
 	}
 }

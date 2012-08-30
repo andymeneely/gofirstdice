@@ -1,5 +1,10 @@
 package org.chaoticbits.gofirst.genetic;
 
+import static org.chaoticbits.gofirst.genetic.DiceGenome.NUM_DICE;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +20,7 @@ import org.chaoticbits.gofirst.genetic.algorithm.IFitnessEvaluator;
  */
 public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 
-	public static final long DEFAULT_NUM_TRIALS = 100000;
+	public static final long DEFAULT_NUM_TRIALS = NUM_DICE * NUM_DICE * 1000;
 	private final long numTrials;
 	private final Random rand;
 
@@ -35,57 +40,77 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 	 * 
 	 * <ol>
 	 * <li>Roll all of the dice for numTrials times</li>
-	 * <li>Count the number of victories for each player</li>
-	 * <li>Compute E(Victories), i.e. the expected number of victories for each player (numTrials/numDice)</li>
-	 * <li>Compute the 1.0 - |E(Victories) - Victories|/(numTrials*2), or the absolute value of the
-	 * difference between expected and actual, times two (since we double-counted), and subtract from the
-	 * maximum 1.0 since we want high fitness.
+	 * <li>Determine player order on each roll, tallying up how many times each die was in each place</li>
+	 * <li>Compute E(Place), i.e. the expected number of times a player was supposed to be in a given place
+	 * (numTrials/numDice)</li>
+	 * <li>Compute the 1.0 - |E(Place) - Actual|/(numTrials*2), or the absolute value of the difference
+	 * between expected and actual, times two (since we double-counted), and subtract from the maximum 1.0
+	 * since we want high fitness.
 	 * <li>
 	 * </ol>
 	 * 
 	 * There is no need to compute inner combinations of fewer players than dice, since it's as if you did
 	 * roll the die, but then ignored it.
 	 * 
-	 * A poor fitness will be about 94%, and a great fitness is 99.99%
+	 * Worst fitness is 25% (completely lopsided), poor fitness is about 95%, and a great fitness is 99.99%
 	 * 
 	 * @param genome
 	 * @return the average percentage over or under the expected number of trials won by each player
 	 */
 	public Double fitness(DiceGenome genome) {
 		List<Die> dice = genome.getDice();
-		return compute(simulate(dice, new long[dice.size()]), DiceGenome.NUM_DICE);
+		return simulateFullOrder(dice);
 	}
 
-	private long[] simulate(List<Die> dice, long[] victories) {
+	private static class DieSide {
+		private Integer die;
+		private Integer side;
+
+		public DieSide(int die, int side) {
+			this.die = die;
+			this.side = side;
+		}
+	}
+
+	private double simulateFullOrder(List<Die> dice) {
+		final int numDice = dice.size();
+		long tally[][] = new long[numDice][numDice]; // [player][place]
+		List<DieSide> victoryOrder;
 		for (long trial = 0; trial < numTrials; trial++) {
-			int victor = -1;
-			int highest = -1;
-			for (int i = 0; i < dice.size(); i++) {
-				int roll = dice.get(i).roll(rand);
-				if (roll > highest) {
-					victor = i;
-					highest = roll;
-				}
+			victoryOrder = new ArrayList<SimulationEvaluator.DieSide>(numDice);
+			for (int die = 0; die < dice.size(); die++) {
+				int roll = dice.get(die).roll(rand);
+				victoryOrder.add(new DieSide(die, roll));
 			}
-			victories[victor]++;
+			tally(victoryOrder, tally);
 		}
-		return victories;
+		return compute(numDice, tally);
 	}
 
-	private Double compute(long[] victories, int numDice) {
-		double totalMisses = 0;
-		long totalVictories = sum(victories);
-		for (int victor = 0; victor < numDice; victor++) {
-			totalMisses += Math.abs(victories[victor] - totalVictories / numDice); // |actual-expected|
+	private void tally(List<DieSide> victoryOrder, long[][] tally) {
+		Collections.sort(victoryOrder, new Comparator<DieSide>() {
+			@Override
+			public int compare(DieSide o1, DieSide o2) {
+				return -1 * o1.side.compareTo(o2.side); // highest first
+			}
+		});
+		int place = 0;
+		for (DieSide dieSide : victoryOrder) {
+			tally[dieSide.die][place++]++;
 		}
-		return 1.0 - totalMisses / (2 * totalVictories); // double-counted the totalMisses, hence the 2
 	}
 
-	private long sum(long[] victories) {
-		long total = 0;
-		for (long victory : victories) {
-			total += victory;
+	private double compute(final int numDice, long[][] tally) {
+		// |actual-expected|/(2*total), a little fairer if expected evenly divides, hence the default
+		double expected = numTrials / numDice; // each roll had numDice additions to the tally
+		double totalMisses = 0.0d;
+		for (int die = 0; die < numDice; die++) {
+			for (int place = 0; place < numDice; place++) {
+				totalMisses += Math.abs(tally[die][place] - expected); // |actual-expected|
+			}
 		}
-		return total;
+		// double-counted totalMisses, numDice places per roll
+		return 1.0 - totalMisses / (2 * numDice * numTrials);
 	}
+
 }
