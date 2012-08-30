@@ -53,10 +53,10 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 	 */
 	public Double fitness(DiceGenome genome) {
 		List<Die> dice = genome.getDice();
-		return compute(fourPlayer(dice, new long[DiceGenome.NUM_DICE]), DiceGenome.NUM_DICE);
+		return compute(simulate(dice, new long[dice.size()]), DiceGenome.NUM_DICE);
 	}
 
-	private long[] fourPlayer(List<Die> dice, long[] victories) {
+	private long[] simulate(List<Die> dice, long[] victories) {
 		for (long trial = 0; trial < numTrials; trial++) {
 			int victor = -1;
 			int highest = -1;
