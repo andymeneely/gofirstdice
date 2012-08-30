@@ -19,7 +19,7 @@ public class RunGA {
 
 	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RunGA.class);
 	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
-	private static final int NUM_FITNESS_TRIALS = 10000;
+	private static final int NUM_FITNESS_TRIALS = 100000;
 	public static final int POPULATION_SIZE = 1000;
 	public static final int NUM_GENERATIONS = 30;
 	public static final int MUTATION_SWAPS = 1;
@@ -46,12 +46,14 @@ public class RunGA {
 	private static void merge(List<DiceGenome> mainPopulation, List<DiceGenome> subPop) {
 		GaussianRNGTransformer rng = new GaussianRNGTransformer(rand);
 		log.info("Merging subpopulation with main population...");
-		for (DiceGenome diceGenome : subPop) { // cross everyone in the subpop with the main pop
-			int cut = rand.nextInt(DiceGenome.SIZE);
-			int mainIndex = rng.nextInt(mainPopulation.size());
-			mainPopulation.add(mainPopulation.get(mainIndex).crossOver(diceGenome, cut));
-			mainPopulation.add(diceGenome.crossOver(mainPopulation.get(mainIndex), cut));
+		if (mainPopulation.size() > 0) {
+			for (DiceGenome diceGenome : subPop) { // cross everyone in the subpop with the main pop
+				int cut = rand.nextInt(DiceGenome.SIZE);
+				int mainIndex = rng.nextInt(mainPopulation.size());
+				mainPopulation.add(mainPopulation.get(mainIndex).crossOver(diceGenome, cut));
+				mainPopulation.add(diceGenome.crossOver(mainPopulation.get(mainIndex), cut));
 
+			}
 		}
 		mainPopulation.addAll(subPop); // also, add the subpop anyway
 		log.info("Sorting main population...");
