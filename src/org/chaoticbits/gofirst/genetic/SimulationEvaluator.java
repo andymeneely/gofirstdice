@@ -24,6 +24,12 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 	private final long numTrials;
 	private final Random rand;
 
+	@SuppressWarnings("unused")
+	private SimulationEvaluator(){
+		numTrials = DEFAULT_NUM_TRIALS;
+		rand = null;
+	}
+	
 	public SimulationEvaluator(Random rand) {
 		this.rand = rand;
 		this.numTrials = DEFAULT_NUM_TRIALS;
@@ -59,7 +65,7 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 	 */
 	public Double fitness(DiceGenome genome) {
 		List<Die> dice = genome.getDice();
-		return simulateFullOrder(dice);
+		return compute(dice.size(), simulateFullOrder(dice));
 	}
 
 	private static class DieSide {
@@ -72,7 +78,7 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 		}
 	}
 
-	private double simulateFullOrder(List<Die> dice) {
+	private long[][] simulateFullOrder(List<Die> dice) {
 		final int numDice = dice.size();
 		long tally[][] = new long[numDice][numDice]; // [player][place]
 		List<DieSide> victoryOrder;
@@ -84,7 +90,7 @@ public class SimulationEvaluator implements IFitnessEvaluator<DiceGenome> {
 			}
 			tally(victoryOrder, tally);
 		}
-		return compute(numDice, tally);
+		return tally;
 	}
 
 	private void tally(List<DieSide> victoryOrder, long[][] tally) {

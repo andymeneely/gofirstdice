@@ -14,12 +14,13 @@ import org.chaoticbits.gofirst.genetic.algorithm.BirthCertificate.Type;
 import org.chaoticbits.gofirst.genetic.algorithm.GaussianRNGTransformer;
 import org.chaoticbits.gofirst.genetic.algorithm.SwapMutator;
 import org.uncommons.maths.random.MersenneTwisterRNG;
+import static org.chaoticbits.gofirst.genetic.DiceGenome.NUM_DICE;
 
 public class RunGA {
 
 	private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RunGA.class);
 	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
-	private static final int NUM_FITNESS_TRIALS = 100000;
+	private static final int NUM_FITNESS_TRIALS = NUM_DICE * 10000;
 	public static final int POPULATION_SIZE = 1000;
 	public static final int NUM_GENERATIONS = 30;
 	public static final int MUTATION_SWAPS = 1;

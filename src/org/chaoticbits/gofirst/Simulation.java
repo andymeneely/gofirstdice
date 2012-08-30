@@ -28,13 +28,13 @@ public class Simulation {
 			3, 6, 12, 13, 17, 24, 25, 32, 36, 37, 43, 46, //
 			4, 5, 9, 16, 20, 21, 28, 29, 33, 40, 44, 45);
 
-	private static List<Integer> anotherTest = Arrays.asList(14, 33, 45, 24, 35, 16, 8, 9, 2, 39, 22, 44, 46, 5, 38,
-			40, 12, 18, 34, 37, 17, 3, 25, 20, 21, 1, 31, 27, 19, 13, 43, 47, 15, 42, 7, 28, 4, 26, 11, 32, 29, 41, 10,
-			6, 23, 48, 36, 30);
+	private static List<Integer> bestYet = Arrays.asList(5, 13, 15, 19, 21, 23, 25, 32, 35, 38, 40, 47, 3, 7, 8, 11,
+			12, 14, 29, 30, 33, 41, 44, 46, 2, 9, 16, 17, 18, 24, 26, 34, 36, 39, 42, 43, 1, 4, 6, 10, 20, 22, 27, 28,
+			31, 37, 45, 48);
 
 	public static void main(String[] args) {
 		rand = new MersenneTwisterRNG();
-		DiceGenome genome = new DiceGenome(rand, actualGoFirst);
+		DiceGenome genome = new DiceGenome(rand, bestYet);
 		List<Die> dice = genome.getDice();
 		simulate("All four", dice.get(0), dice.get(1), dice.get(2), dice.get(3));
 		for (int out = 0; out < dice.size(); out++) {
@@ -58,7 +58,7 @@ public class Simulation {
 	private static void simulate(String description, Die... dice) {
 		System.out.println("Simulation for " + description);
 		int[] victories = new int[] { 0, 0, 0, 0 };
-		for (long trial = 0; trial < 10000000L; trial++) {
+		for (long trial = 0; trial < 4 * 4 * 100000; trial++) {
 			int victor = -1;
 			int highest = -1;
 			for (int i = 0; i < dice.length; i++) {
