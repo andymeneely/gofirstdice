@@ -22,7 +22,7 @@ public class RunGA {
 	private static final MersenneTwisterRNG rand = new MersenneTwisterRNG();
 	private static final int NUM_FITNESS_TRIALS = NUM_DICE * 10000;
 	public static final int POPULATION_SIZE = 1000;
-	public static final int NUM_GENERATIONS = 30;
+	public static final int NUM_GENERATIONS = 50;
 	public static final int MUTATION_SWAPS = 1;
 	public static final int NUM_MUTANTS_PER_GEN = 300;
 	public static final int NUM_IMMIGRANTS_PER_GEN = 300;
