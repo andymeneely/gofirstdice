@@ -18,6 +18,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(SimulationEvaluator.class)
 public class SimulationEvaluatorTest {
 
+	private Random rand = null;
+
 	@Test
 	public void computeNormal() throws Exception {
 		// normal: die[0] < die[1] < die[2] < die[3] always
@@ -49,7 +51,7 @@ public class SimulationEvaluatorTest {
 		SimulationEvaluator evaluator = PowerMock.createPartialMockAndInvokeDefaultConstructor(
 				SimulationEvaluator.class, "simulateFullOrder");
 		DiceGenome genome = PowerMock.createMock(DiceGenome.class);
-		List<Die> dice = new DiceGenome(null, DiceGenomeTest.NORMAL).getDice();
+		List<Die> dice = new DiceGenome(rand, DiceGenomeTest.NORMAL).getDice();
 
 		EasyMock.expect(genome.getDice()).andReturn(dice).once();
 		PowerMock.expectPrivate(evaluator, "simulateFullOrder", dice).andReturn(

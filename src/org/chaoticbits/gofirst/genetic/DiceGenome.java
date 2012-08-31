@@ -60,6 +60,13 @@ public class DiceGenome implements Comparable<DiceGenome> {
 		evaluator = new SimulationEvaluator(rand);
 		this.birthCertificate = new BirthCertificate<DiceGenome>(Type.INIT, new DiceGenome[] {});
 	}
+	
+	public DiceGenome(IFitnessEvaluator<DiceGenome> evaluator, List<Integer> sides) {
+		genome.addAll(sides);
+		this.rand = null;
+		this.evaluator = evaluator;
+		this.birthCertificate = new BirthCertificate<DiceGenome>(Type.INIT, new DiceGenome[] {});
+	}
 
 	public DiceGenome(Random rand, BirthCertificate<DiceGenome> birthCertificate, List<Integer> sides) {
 		genome.addAll(sides);
